@@ -97,9 +97,9 @@
     <audio src="index.m4a" controls id="display">
     </audio>
     <div class="orientation-warning">
-        <div class="orientation-icon">📱</div>
+        <!-- <div class="orientation-icon">📱</div>
         <p>请将设备横屏以获得最佳观看效果</p>
-    </div>
+    </div> -->
     <div class="media-permission" id="mediaPermission">
         点击屏幕以播放背景音乐
     </div>
@@ -113,22 +113,22 @@
     const mediaPermission = document.getElementById('mediaPermission');
     
     // 处理点击事件，请求媒体权限
-    document.addEventListener('click', function() {
-        mediaPermission.classList.remove('show');
-        // 点击时隐藏横屏提醒
-        document.querySelector('.orientation-warning').style.display = 'none';
-        display.play().catch(function(error) {
-            console.log('播放失败:', error);
-        });
-    });
+    // document.addEventListener('click', function() {
+    //     mediaPermission.classList.remove('show');
+    //     // 点击时隐藏横屏提醒
+    //     document.querySelector('.orientation-warning').style.display = 'none';
+    //     display.play().catch(function(error) {
+    //         console.log('播放失败:', error);
+    //     });
+    // });
     
-    // 横屏提醒3秒后自动隐藏
-    setTimeout(function() {
-        const orientationWarning = document.querySelector('.orientation-warning');
-        if (orientationWarning) {
-            orientationWarning.style.display = 'none';
-        }
-    }, 3000);
+    // // 横屏提醒3秒后自动隐藏
+    // setTimeout(function() {
+    //     const orientationWarning = document.querySelector('.orientation-warning');
+    //     if (orientationWarning) {
+    //         orientationWarning.style.display = 'none';
+    //     }
+    // }, 3000);
     
     // 显示媒体权限提示
     setTimeout(function() {
@@ -195,3 +195,4 @@
         init();
     });
 </script>
+
