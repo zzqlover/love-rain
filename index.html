@@ -24,6 +24,77 @@
            background-size: cover;
            background-position: center bottom;
         }
+         #canvas{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #display{
+            display: none;
+        }
+        .orientation-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            padding: 20px;
+        }
+        .orientation-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: rotate 3s infinite ease-in-out;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .media-permission {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 999;
+            display: none;
+        }
+        .media-permission.show {
+            display: block;
+        }
+        /* 媒体查询 - 竖屏模式 */
+        @media (orientation: portrait) {
+            .orientation-warning {
+                display: flex;
+            }
+            .main {
+                display: none;
+            }
+        }
+        /* 媒体查询 - 横屏模式 */
+        @media (orientation: landscape) {
+            .orientation-warning {
+                display: none;
+            }
+            .main {
+                display: block;
+            }
+        }
         /* #canvas{
            filter:drop-shadow(0 0 1px #fff);
         } */
@@ -35,6 +106,13 @@
 <body>
     <audio src="index.m4a" controls id="display">
     </audio>
+      <div class="orientation-warning">
+        <div class="orientation-icon">📱</div>
+        <p>请将设备横屏以获得最佳观看效果</p>
+    </div>
+    <div class="media-permission" id="mediaPermission">
+        点击屏幕以播放背景音乐
+    </div>
     <div class="main">
         <canvas id="canvas"></canvas>
     </div>
@@ -42,9 +120,20 @@
 </html>
 <script>
     const display = document.getElementById('display');
-    this.addEventListener('click', function(){
-        display.play();
-    })
+    const mediaPermission = document.getElementById('mediaPermission');
+    
+    // 处理点击事件，请求媒体权限
+    document.addEventListener('click', function() {
+        mediaPermission.classList.remove('show');
+        display.play().catch(function(error) {
+            console.log('播放失败:', error);
+        });
+    });
+    
+    // 显示媒体权限提示
+    setTimeout(function() {
+        mediaPermission.classList.add('show');
+    }, 1000);
     let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -104,4 +193,12 @@ window.addEventListener('resize', function() {
     meteorites = [];
     init();
 });
+    window.addEventListener('resize', function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // 重新初始化流星
+    meteorites = [];
+    init();
+});
 </script>
+
