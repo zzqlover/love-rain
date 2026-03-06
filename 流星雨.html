@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+        }
+        .main{
+            width: 100%;
+            height: 100%;
+            background-image: url(1.jpg);
+           position: fixed;
+           background-size: cover;
+           background-position: center bottom;
+        }
+        /* #canvas{
+           filter:drop-shadow(0 0 1px #fff);
+        } */
+#display{
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <audio src="index.m4a" controls id="display">
+    </audio>
+    <div class="main">
+        <canvas id="canvas"></canvas>
+    </div>
+</body>
+</html>
+<script>
+    const display = document.getElementById('display');
+    this.addEventListener('click', function(){
+        display.play();
+    })
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let meteorites = [];
+    let all = 60;
+    function init(){
+        for (let i = 0; i < all; i++) {
+            newmeteorites()
+    }
+}
+function newmeteorites(){
+    meteorites.push({
+        lines: [{
+            x: parseInt(Math.random() * canvas.width),
+            y: parseInt(Math.random() * canvas.height * 0.7)
+        }],
+        life : parseInt(Math.random() * 100) + 100,
+        age : 0
+    })
+}
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height); 
+    for (let i = 0; i < meteorites.length; i++) {
+        let meteorite = meteorites[i];
+        let lines = meteorite.lines;
+        for(let j = 0; j < lines.length; j++){
+            ctx.fillStyle = `rgba(255,255,255,${j / lines.length})`;
+            ctx.fillRect(lines[j].x, lines[j].y, 1, 1);
+        }
+        ctx.fillStyle = 'yellow';
+        let s_head = lines[lines.length - 1];
+        ctx.fillRect(s_head.x, s_head.y, 2, 2);
+        if(meteorite.age <= meteorite.life / 2){
+            lines.push({
+                x: s_head.x + 1,
+                y: s_head.y + 0.3
+            });
+        }else{
+            lines.shift();
+        }
+        meteorite.age++;
+        if(meteorite.age >= meteorite.life){
+            meteorites.splice(i, 1);
+            newmeteorites();
+        }
+    }
+}
+init();
+setInterval(draw, 16);
+
+// 处理窗口大小变化
+window.addEventListener('resize', function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // 重新初始化流星
+    meteorites = [];
+    init();
+});
+</script>
